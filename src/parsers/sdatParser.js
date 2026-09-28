@@ -7,7 +7,11 @@ export function parseSdat(xmlText) {
 
     const data = parser.parse(xmlText);
 
-    const root = data["rsm:ValidatedMeteredData_12"];
+    const rootKey = Object.keys(data).find((key) =>
+        key.startsWith("rsm:ValidatedMeteredData_")
+    );
+
+    const root = data[rootKey];
 
     const meteringData = root["rsm:MeteringData"];
     
