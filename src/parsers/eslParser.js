@@ -1,4 +1,4 @@
-import { XMLParser } from 'fast-xml-parser';
+import { XMLParser } from "fast-xml-parser";
 
 const parser = new XMLParser({
     removeNSPrefix: true,
@@ -9,8 +9,8 @@ const parser = new XMLParser({
 });
 
 const measurementGroups = [
-    { id: 742, kind: 'bezug', obis: ['1-1:1.8.1', '1-1:1.8.2'] },
-    { id: 735, kind: 'einspeisung', obis: ['1-1:2.8.1', '1-1:2.8.2'] },
+    { id: 742, kind: "bezug", obis: ["1-1:1.8.1", "1-1:1.8.2"] },
+    { id: 735, kind: "einspeisung", obis: ["1-1:2.8.1", "1-1:2.8.2"] },
 ];
 
 export function parseESL(xmlString) {
@@ -21,18 +21,18 @@ export function parseESL(xmlString) {
     const out = [];
     for (const meter of root.Meter ?? []) {
         for (const period of meter.TimePeriod ?? []) {
-            const end = period['@_end'];
+            const end = period["@_end"];
             const timestamp = new Date(end);
             if (!end || Number.isNaN(timestamp.getTime())) continue;
 
             const values = new Map();
             for (const row of period.ValueRow ?? []) {
-                const rawValue = row['@_value'];
+                const rawValue = row["@_value"];
                 if (rawValue == null || String(rawValue).trim() === '') continue;
                 const value = Number(rawValue);
                 if (!Number.isFinite(value)) continue;
 
-                const obis = String(row['@_obis'] ?? '');
+                const obis = String(row["@_obis"] ?? "");
                 values.set(obis, (values.get(obis) ?? 0) + value);
             }
 
