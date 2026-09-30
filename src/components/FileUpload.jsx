@@ -3,7 +3,7 @@ import { parseESL } from "../parsers/eslParser";
 import { parseSdat } from "../parsers/sdatParser";
 import { getConsumptionByTimestamp } from "../data/consumptionByTimestamp";
 import ZaehlerstandChart from "./ZaehlerstandChart.jsx";
-import { mergeReadings } from "./zaehlerstandChart.js";
+import { mergeReadings, sdatFilesToReadings } from "./zaehlerstandChart.js";
 
 function getXmlFormat(xmlText) {
     // SDAT kommt unter anderem als ValidatedMeteredData_11 und _12 vor.
@@ -42,9 +42,10 @@ function getAbsoluteReadings(summary) {
 
     const eslReadings = summary.parsedFiles
         .filter((file) => file.format === "esl")
-        .map((file) => file.data);
+        .flatMap((file) => file.data);
+    const sdatReadings = sdatFilesToReadings(summary.parsedFiles, eslReadings);
 
-    return mergeReadings(...eslReadings);
+    return mergeReadings(sdatReadings, eslReadings);
 }
 
 // Diese Funktion gibt dem Browser Zeit, um Zwischenergebnisse beim Kalkulieren zu geben, anstatt lange zu warten
@@ -162,8 +163,7 @@ export default function FileUpload() {
                         <ZaehlerstandChart readings={readings} />
                     ) : (
                         <p>
-                            Für die Absolutwertgrafik werden ESL-Zählerstände benötigt.
-                            SDAT-Dateien enthalten relative Werte ohne Messart-Zuordnung.
+                            Keine Zählerstände zum Anzeigen. Eine SDAT-Datei braucht die Sensor-ID 735 oder 742.
                         </p>
                     )}
                 </div>

@@ -39,6 +39,55 @@ export function sdatToReadings(parsed, kind, startValue = 0) {
     return points;
 }
 
+const SENSOR_KIND = {
+    742: "bezug",
+    735: "einspeisung",
+};
+
+export function sdatFilesToReadings(parsedFiles, eslReadings) {
+    const measurementsByKind = new Map();
+
+    for (const file of parsedFiles) {
+        if (file.format !== "sdat") continue;
+        const kind = SENSOR_KIND[file.data.sensorId];
+        if (!kind) continue;
+
+        const byTimestamp = measurementsByKind.get(kind) ?? new Map();
+        for (const measurement of file.data.measurements) {
+            byTimestamp.set(measurement.timestamp, measurement);
+        }
+        measurementsByKind.set(kind, byTimestamp);
+    }
+
+    const points = [];
+    for (const [kind, byTimestamp] of measurementsByKind) {
+        const sorted = [...byTimestamp.values()].sort((a, b) => a.timestamp - b.timestamp);
+        if (sorted.length === 0) continue;
+
+        let total = findAnchor(eslReadings, kind, sorted[0].timestamp);
+        points.push({
+            timestamp: new Date(sorted[0].timestamp).toISOString(),
+            value: total,
+            total,
+            kind,
+        });
+
+        for (const measurement of sorted) {
+            const delta = Number(measurement.relativeValue);
+            if (!Number.isFinite(delta)) continue;
+            total += delta;
+            points.push({
+                timestamp: new Date(measurement.endTimestamp ?? measurement.timestamp).toISOString(),
+                value: total,
+                total,
+                kind,
+            });
+        }
+    }
+
+    return points;
+}
+
 export function mergeReadings(...lists) {
     const map = new Map();
     for (const r of lists.flat()) {
@@ -50,16 +99,20 @@ export function mergeReadings(...lists) {
 }
 
 export function renderZaehlerstandChart(canvas, readings) {
-    const datasets = Object.entries(KINDS).map(([kind, label]) => ({
-        label,
-        data: readings
+    const datasets = Object.entries(KINDS).flatMap(([kind, label]) => {
+        const data = readings
             .filter((r) => r.kind === kind)
-            .map((r) => ({ x: Date.parse(r.timestamp), y: r.value })),
-        borderColor: kind === "bezug" ? "#087e8b" : "#d45c35",
-        pointRadius: 0,
-        borderWidth: 2,
-        tension: 0,
-    }));
+            .map((r) => ({ x: Date.parse(r.timestamp), y: r.value }));
+        if (data.length === 0) return [];
+        return [{
+            label,
+            data,
+            borderColor: kind === "bezug" ? "#087e8b" : "#d45c35",
+            pointRadius: 0,
+            borderWidth: 2,
+            tension: 0,
+        }];
+    });
 
     return new Chart(canvas, {
         type: "line",
