@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { parseESL } from "../parsers/eslParser";
 import { parseSdat } from "../parsers/sdatParser";
+import { getConsumptionByTimestamp } from "../data/consumptionByTimestamp";
 
 function getXmlFormat(xmlText) {
     // SDAT kommt unter anderem als ValidatedMeteredData_11 und _12 vor.
@@ -85,12 +86,15 @@ export default function FileUpload() {
             }
         }
 
+        const consumptionByTimestamp = getConsumptionByTimestamp(parsedFiles);
+
         const nextSummary = {
             fileCount: parsedFiles.length,
             measurementCount,
             errorCount: errors.length,
             parsedFiles,
-            errors
+            errors,
+            consumptionByTimestamp
         };
 
         // Alle ausgelesenen Daten bleiben gemeinsam und nach Quelldatei zugeordnet.

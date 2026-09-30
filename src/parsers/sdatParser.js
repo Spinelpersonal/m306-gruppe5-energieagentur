@@ -27,6 +27,9 @@ export function parseSdat(xmlText) {
     }
     
     const documentId = meteringData.DocumentID;
+    const headerDocumentId =
+        root.ValidatedMeteredData_HeaderInformation?.InstanceDocument?.DocumentID;
+    const sensorId = readSensorId(headerDocumentId, documentId);
     const interval = meteringData.Interval;
     const resolution = meteringData.Resolution;
     const rawObservations = meteringData.Observation;
@@ -76,10 +79,22 @@ export function parseSdat(xmlText) {
 
     return {
         documentId,
+        sensorId,
         startDateTime,
         endDateTime,
         resolution: resolutionValue,
         resolutionUnit,
         measurements
     };
+}
+
+function readSensorId(...candidates) {
+    for (const candidate of candidates) {
+        const match = String(candidate ?? "").match(/ID(735|742)/);
+        if (match) {
+            return Number(match[1]);
+        }
+    }
+
+    return null;
 }
