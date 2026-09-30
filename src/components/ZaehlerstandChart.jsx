@@ -2,9 +2,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { renderZaehlerstandChart } from "./zaehlerstandChart.js";
 
 const VIEWS = [
-    { id: "beide", label: "Beide" },
-    { id: "bezug", label: "Bezug" },
-    { id: "einspeisung", label: "Einspeisung" },
+    { id: "beide", label: "Zählerstand – Beide" },
+    { id: "bezug", label: "Zählerstand – Bezug" },
+    { id: "einspeisung", label: "Zählerstand – Einspeisung" },
 ];
 
 export default function ZaehlerstandChart({ readings }) {
