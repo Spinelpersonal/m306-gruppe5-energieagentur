@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { parseESL } from "../parsers/eslParser";
 import { parseSdat } from "../parsers/sdatParser";
+import ZaehlerstandChart from "./ZaehlerstandChart.jsx";
+import { mergeReadings } from "./zaehlerstandChart.js";
 
 function getXmlFormat(xmlText) {
     // SDAT kommt unter anderem als ValidatedMeteredData_11 und _12 vor.
@@ -34,6 +36,16 @@ function countMeasurements(parsedFile) {
         : parsedFile.data.length;
 }
 
+function getAbsoluteReadings(summary) {
+    if (!summary) return [];
+
+    const eslReadings = summary.parsedFiles
+        .filter((file) => file.format === "esl")
+        .map((file) => file.data);
+
+    return mergeReadings(...eslReadings);
+}
+
 // Diese Funktion gibt dem Browser Zeit, um Zwischenergebnisse beim Kalkulieren zu geben, anstatt lange zu warten
 function yieldToBrowser() {
     return new Promise((resolve) => setTimeout(resolve, 0));
@@ -43,6 +55,7 @@ export default function FileUpload() {
     const [progress, setProgress] = useState(null);
     const [summary, setSummary] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
+    const readings = getAbsoluteReadings(summary);
 
     async function handleFiles(event) {
         const files = Array.from(event.target.files ?? [])
@@ -139,6 +152,14 @@ export default function FileUpload() {
                         <p>
                             {summary.errorCount} Dateien konnten nicht verarbeitet
                             werden. Details stehen in der Browser-Konsole.
+                        </p>
+                    )}
+                    {readings.length > 0 ? (
+                        <ZaehlerstandChart readings={readings} />
+                    ) : (
+                        <p>
+                            Für die Absolutwertgrafik werden ESL-Zählerstände benötigt.
+                            SDAT-Dateien enthalten relative Werte ohne Messart-Zuordnung.
                         </p>
                     )}
                 </div>
