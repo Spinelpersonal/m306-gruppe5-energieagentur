@@ -3,7 +3,7 @@ import { parseESL } from "../parsers/eslParser";
 import { parseSdat } from "../parsers/sdatParser";
 import { getConsumptionByTimestamp } from "../data/consumptionByTimestamp";
 import ZaehlerstandChart from "./ZaehlerstandChart.jsx";
-import { mergeReadings, eslFilesToReadings } from "./zaehlerstandChart.js";
+import { eslFilesToReadings } from "./zaehlerstandChart.js";
 import VerbrauchChart from "./VerbrauchChart.jsx";
 
 function getXmlFormat(xmlText) {
