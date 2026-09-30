@@ -4,10 +4,9 @@ import { parseSdat } from "../parsers/sdatParser";
 import { getConsumptionByTimestamp } from "../data/consumptionByTimestamp";
 import ZaehlerstandChart from "./ZaehlerstandChart.jsx";
 import { mergeReadings, sdatFilesToReadings } from "./zaehlerstandChart.js";
+import VerbrauchChart from "./VerbrauchChart.jsx";
 
 function getXmlFormat(xmlText) {
-    // SDAT kommt unter anderem als ValidatedMeteredData_11 und _12 vor.
-    // Der Namespace-Präfix (z. B. rsm:) ist frei wählbar und daher optional.
     if (/<(?:[\w.-]+:)?ValidatedMeteredData(?:_\d+)?(?=[\s/>])/.test(xmlText)) {
         return "sdat";
     }
@@ -58,6 +57,12 @@ export default function FileUpload() {
     const [summary, setSummary] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const readings = getAbsoluteReadings(summary);
+
+    const consumption = summary?.consumptionByTimestamp;
+
+    const hasConsumption =
+        (consumption?.consumptionByTimestamp_ID742?.size ?? 0) > 0 ||
+        (consumption?.consumptionByTimestamp_ID735?.size ?? 0) > 0;
 
     async function handleFiles(event) {
         const files = Array.from(event.target.files ?? [])
@@ -157,6 +162,14 @@ export default function FileUpload() {
                         <p>
                             {summary.errorCount} Dateien konnten nicht verarbeitet
                             werden. Details stehen in der Browser-Konsole.
+                        </p>
+                    )}
+                    {hasConsumption ? (
+                        <VerbrauchChart consumptionByTimestamp={consumption} />
+                    ) : (
+                        <p>
+                            Für das Verbrauchsdiagramm werden SDAT-Verbrauchswerte
+                            der ID 735 oder ID 742 benötigt.
                         </p>
                     )}
                     {readings.length > 0 ? (
