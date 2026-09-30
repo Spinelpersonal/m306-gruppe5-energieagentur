@@ -136,9 +136,9 @@ function formatAxisLabel(timestamp, period) {
     }
 
     return date.toLocaleDateString("de-CH", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "2-digit",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
         timeZone: "UTC",
     });
 }
@@ -205,6 +205,8 @@ export function renderVerbrauchChart(
             scales: {
                 x: {
                     type: "linear",
+                    offset: false,
+                    bounds: "data",
                     title: {
                         display: true,
                         text: settings.xTitle,

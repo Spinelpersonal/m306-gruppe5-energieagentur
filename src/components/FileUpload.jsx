@@ -3,7 +3,7 @@ import { parseESL } from "../parsers/eslParser";
 import { parseSdat } from "../parsers/sdatParser";
 import { getConsumptionByTimestamp } from "../data/consumptionByTimestamp";
 import ZaehlerstandChart from "./ZaehlerstandChart.jsx";
-import { mergeReadings, sdatFilesToReadings } from "./zaehlerstandChart.js";
+import { mergeReadings, eslFilesToReadings } from "./zaehlerstandChart.js";
 import VerbrauchChart from "./VerbrauchChart.jsx";
 
 function getXmlFormat(xmlText) {
@@ -39,12 +39,7 @@ function countMeasurements(parsedFile) {
 function getAbsoluteReadings(summary) {
     if (!summary) return [];
 
-    const eslReadings = summary.parsedFiles
-        .filter((file) => file.format === "esl")
-        .flatMap((file) => file.data);
-    const sdatReadings = sdatFilesToReadings(summary.parsedFiles, eslReadings);
-
-    return mergeReadings(sdatReadings, eslReadings);
+    return eslFilesToReadings(summary.parsedFiles);
 }
 
 // Diese Funktion gibt dem Browser Zeit, um Zwischenergebnisse beim Kalkulieren zu geben, anstatt lange zu warten
@@ -176,7 +171,7 @@ export default function FileUpload() {
                         <ZaehlerstandChart readings={readings} />
                     ) : (
                         <p>
-                            Keine Zählerstände zum Anzeigen. Eine SDAT-Datei braucht die Sensor-ID 735 oder 742.
+                            Keine ESL-Zählerstände zum Anzeigen.
                         </p>
                     )}
                 </div>

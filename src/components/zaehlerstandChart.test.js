@@ -1,41 +1,106 @@
 import { describe, expect, it } from "vitest";
-import { sdatFilesToReadings } from "./zaehlerstandChart";
+import {
+    eslFilesToReadings,
+    mergeReadings,
+} from "./zaehlerstandChart";
 
-describe("sdatFilesToReadings", () => {
-    it("zählt SDAT-Verbrauch auf den letzten ESL-Stand davor", () => {
-        const eslReadings = [
-            { timestamp: "2019-01-01T00:00:00.000Z", value: 100, kind: "einspeisung" },
-            { timestamp: "2019-01-01T00:00:00.000Z", value: 50, kind: "bezug" },
+describe("eslFilesToReadings", () => {
+    it("verwendet nur ESL-Zählerstände und ignoriert SDAT-Daten", () => {
+        const parsedFiles = [
+            {
+                format: "esl",
+                data: [
+                    {
+                        timestamp: "2024-02-01T00:00:00.000Z",
+                        value: 120,
+                        kind: "bezug",
+                    },
+                    {
+                        timestamp: "2024-01-01T00:00:00.000Z",
+                        value: 100,
+                        kind: "bezug",
+                    },
+                ],
+            },
+            {
+                format: "sdat",
+                data: {
+                    sensorId: 742,
+                    measurements: [
+                        {
+                            timestamp: Date.parse("2024-01-15T00:00:00Z"),
+                            relativeValue: 999,
+                        },
+                    ],
+                },
+            },
         ];
-        const start = Date.parse("2019-03-01T00:00:00Z");
-        const step = 15 * 60 * 1000;
 
-        const result = sdatFilesToReadings([
+        expect(eslFilesToReadings(parsedFiles)).toEqual([
+            {
+                timestamp: "2024-01-01T00:00:00.000Z",
+                value: 100,
+                kind: "bezug",
+            },
+            {
+                timestamp: "2024-02-01T00:00:00.000Z",
+                value: 120,
+                kind: "bezug",
+            },
+        ]);
+    });
+
+    it("gibt eine leere Liste zurück, wenn nur SDAT-Dateien vorhanden sind", () => {
+        const parsedFiles = [
             {
                 format: "sdat",
                 data: {
-                    sensorId: 735,
+                    sensorId: 742,
                     measurements: [
-                        { timestamp: start, endTimestamp: start + step, relativeValue: 1.5 },
-                        { timestamp: start + step, endTimestamp: start + 2 * step, relativeValue: 0.5 },
+                        {
+                            timestamp: Date.parse("2024-01-01T00:00:00Z"),
+                            relativeValue: 10,
+                        },
                     ],
                 },
+            },
+        ];
+
+        expect(eslFilesToReadings(parsedFiles)).toEqual([]);
+    });
+});
+
+describe("mergeReadings", () => {
+    it("entfernt doppelte ESL-Stände und sortiert sie chronologisch", () => {
+        const readings = [
+            {
+                timestamp: "2024-02-01T00:00:00.000Z",
+                value: 120,
+                kind: "bezug",
             },
             {
-                format: "sdat",
-                data: {
-                    sensorId: 735,
-                    measurements: [
-                        { timestamp: start, endTimestamp: start + step, relativeValue: 2 },
-                    ],
-                },
+                timestamp: "2024-01-01T00:00:00.000Z",
+                value: 100,
+                kind: "bezug",
             },
-        ], eslReadings);
+            {
+                timestamp: "2024-01-01T00:00:00.000Z",
+                value: 105,
+                kind: "bezug",
+            },
+        ];
 
-        expect(result).toEqual([
-            { timestamp: "2019-03-01T00:00:00.000Z", value: 100, total: 100, kind: "einspeisung" },
-            { timestamp: "2019-03-01T00:15:00.000Z", value: 102, total: 102, kind: "einspeisung" },
-            { timestamp: "2019-03-01T00:30:00.000Z", value: 102.5, total: 102.5, kind: "einspeisung" },
+        expect(mergeReadings(readings)).toEqual([
+            {
+                timestamp: "2024-01-01T00:00:00.000Z",
+                value: 105,
+                kind: "bezug",
+            },
+            {
+                timestamp: "2024-02-01T00:00:00.000Z",
+                value: 120,
+                kind: "bezug",
+            },
         ]);
     });
 });

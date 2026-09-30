@@ -4,7 +4,7 @@ const KINDS = {
     bezug: "Bezug (ID 742)",
     einspeisung: "Einspeisung (ID 735)",
 };
-
+/*
 export function findAnchor(eslReadings, kind, timestampMs) {
     let best = null;
     let bestTime = -Infinity;
@@ -86,7 +86,7 @@ export function sdatFilesToReadings(parsedFiles, eslReadings) {
     }
 
     return points;
-}
+}*/
 
 export function mergeReadings(...lists) {
     const map = new Map();
@@ -96,6 +96,14 @@ export function mergeReadings(...lists) {
     return [...map.values()].sort(
         (a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp)
     );
+}
+
+export function eslFilesToReadings(parsedFiles) {
+    const eslReadings = parsedFiles
+        .filter((file) => file.format === "esl")
+        .flatMap((file) => file.data);
+
+    return mergeReadings(eslReadings);
 }
 
 export function renderZaehlerstandChart(canvas, readings) {
@@ -126,12 +134,16 @@ export function renderZaehlerstandChart(canvas, readings) {
             scales: {
                 x: {
                     type: "linear",
-                    title: { display: true, text: "Zeit" },
+                    offset: false,
+                    bounds: "data",
+                    title: { display: true, text: "Monat" },
                     ticks: {
-                        callback: (value) => new Date(value).toLocaleTimeString("de-CH", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                        }),
+                        callback: (value) =>
+                            new Date(value).toLocaleDateString("de-CH", {
+                                month: "short",
+                                year: "numeric",
+                                timeZone: "UTC",
+                            }),
                     },
                 },
                 y: {title: {display: true, text: "Zählerstand [kWh]"}},
@@ -140,7 +152,11 @@ export function renderZaehlerstandChart(canvas, readings) {
                 tooltip: {
                     callbacks: {
                         title: (items) => {
-                            return new Date(items[0].parsed.x).toLocaleString("de-CH");
+                            return new Date(items[0].parsed.x).toLocaleString("de-CH", {
+                                month: "long",
+                                year: "numeric",
+                                timeZone: "UTC",
+                            });
                         },
                     },
                 },

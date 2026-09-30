@@ -61,7 +61,7 @@ export default function VerbrauchChart({ consumptionByTimestamp }) {
                 }}
             >
                 <h2>
-                    Verbrauch und Einspeisung –{" "}
+                    Verbrauch und Einspeisung -{" "}
                     {PERIOD_NAMES[selectedPeriod]}
                 </h2>
 
