@@ -2,9 +2,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { renderZaehlerstandChart } from "./zaehlerstandChart.js";
 
 const VIEWS = [
-    { id: "beide", label: "Zählerstand – Beide" },
-    { id: "bezug", label: "Zählerstand – Bezug" },
-    { id: "einspeisung", label: "Zählerstand – Einspeisung" },
+    { id: "beide", label: "Zählerstand - Beide" },
+    { id: "bezug", label: "Zählerstand - Bezug" },
+    { id: "einspeisung", label: "Zählerstand - Einspeisung" },
 ];
 
 export default function ZaehlerstandChart({ readings }) {
@@ -43,18 +43,26 @@ export default function ZaehlerstandChart({ readings }) {
         <section aria-label="Absolute Zählerstände">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
                 <h2>{VIEWS.find((entry) => entry.id === view).label}</h2>
-                <div style={{ display: "flex", gap: 8 }}>
-                    {VIEWS.map((entry) => (
-                        <button
-                            key={entry.id}
-                            type="button"
-                            onClick={() => setView(entry.id)}
-                            aria-pressed={view === entry.id}
-                        >
-                            {entry.label}
-                        </button>
-                    ))}
-                    <button type="button" onClick={saveScreenshot} disabled={visibleReadings.length === 0}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <label htmlFor="chart-view">Ansicht:</label>
+
+                    <select
+                        id="chart-view"
+                        value={view}
+                        onChange={(event) => setView(event.target.value)}
+                    >
+                        {VIEWS.map((entry) => (
+                            <option key={entry.id} value={entry.id}>
+                                {entry.label}
+                            </option>
+                        ))}
+                    </select>
+
+                    <button
+                        type="button"
+                        onClick={saveScreenshot}
+                        disabled={visibleReadings.length === 0}
+                    >
                         Screenshot speichern
                     </button>
                 </div>
