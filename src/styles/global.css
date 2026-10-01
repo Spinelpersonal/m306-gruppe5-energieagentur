@@ -1,40 +1,39 @@
-/* Alle Farben, Abstände und Schrift der Seite. Hier ändern = überall geändert */
 :root {
-    --color-blue-dark: #0b4dba; /* Firmenname, Zahlen, Button beim Drüberfahren */
-    --color-blue: #1677e0; /* Buttons, aktive Auswahl, Links */
-    --color-blue-light: #41c2fa; /* Rahmen, wenn man mit Tab auf einen Button geht */
-    --color-blue-soft: #e8f1fd; /* Upload-Fläche beim Drüberfahren, Hintergrund vom Ladebalken */
+    --color-blue-dark: #0b4dba;
+    --color-blue: #1677e0;
+    --color-blue-light: #41c2fa;
+    --color-blue-soft: #e8f1fd;
 
-    --color-bg: #f5f8fc; /* Hintergrund der Seite */
-    --color-surface: #ffffff; /* Hintergrund der Karten */
-    --color-text: #1f2937; /* normaler Text */
-    --color-text-muted: #6b7280; /* grauer, kleiner Text */
-    --color-border: #dbe3ee; /* Ränder und Linien */
-    --color-error: #b42318; /* Fehlermeldung */
+    --color-bg: #f5f8fc;
+    --color-surface: #ffffff;
+    --color-text: #1f2937;
+    --color-text-muted: #6b7280;
+    --color-border: #dbe3ee;
+    --color-error: #b42318;
 
-    /* Abstände von klein (xs) bis gross (xl) */
+
     --space-xs: 4px;
     --space-sm: 8px;
     --space-md: 16px;
     --space-lg: 24px;
     --space-xl: 40px;
 
-    --radius: 12px; /* runde Ecken der Karten */
-    --radius-sm: 8px; /* runde Ecken der Buttons */
-    --shadow: 0 1px 3px rgba(15, 40, 80, 0.06), 0 4px 16px rgba(15, 40, 80, 0.06); /* Schatten unter den Karten */
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 3px rgba(15, 40, 80, 0.06), 0 4px 16px rgba(15, 40, 80, 0.06);
 
-    --content-width: 1100px; /* so breit wird die Seite maximal */
+    --content-width: 1100px;
 
-    --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; /* Schrift der ganzen Seite */
+    --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
-/* Rand und Innenabstand zählen zur Breite dazu */
+
 *,
 *::before,
 *::after {
     box-sizing: border-box;
 }
-/* Schrift, Textfarbe und Hintergrund der ganzen Seite */
+
 body {
     margin: 0;
     font-family: var(--font);
@@ -51,7 +50,7 @@ input {
     font: inherit;
 }
 
-/* Kein Standard-Abstand bei Titeln und Text */
+
 h1,
 h2,
 h3,
@@ -59,20 +58,20 @@ p {
     margin: 0;
 }
 
-/* Bilder werden nie breiter als ihr Platz */
+
 img {
     display: block;
     max-width: 100%;
 }
 
-/* Footer bleibt immer ganz unten */
+
 .app {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
-/* Inhalt in der Mitte und nicht zu breit */
+
 .container {
     width: 100%;
     max-width: var(--content-width);
@@ -80,13 +79,13 @@ img {
     padding: 0 var(--space-lg);
 }
 
-/* Weisser Balken oben */
+
 .header {
     background: var(--color-surface);
     border-bottom: 1px solid var(--color-border);
 }
 
-/* Logo und Text nebeneinander */
+
 .header__inner {
     display: flex;
     align-items: center;
@@ -95,27 +94,27 @@ img {
     padding-bottom: var(--space-md);
 }
 
-/* Grösse vom Logo */
+
 .header__logo {
     width: 48px;
     height: 48px;
     object-fit: contain;
 }
 
-/* "Energieagentur Bünzli" */
+
 .header__title {
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--color-blue-dark);
 }
 
-/* "SDAT- & ESL-Viewer" */
+
 .header__subtitle {
     font-size: 0.875rem;
     color: var(--color-text-muted);
 }
 
-/* Karten untereinander mit Abstand */
+
 .main {
     flex: 1;
     display: flex;
@@ -153,7 +152,7 @@ img {
     color: var(--color-text-muted);
 }
 
-/* "Gruppe 5 · M306 · 2026" ganz unten */
+
 .footer {
     padding: var(--space-lg) 0;
     font-size: 0.875rem;
@@ -161,7 +160,7 @@ img {
     text-align: center;
 }
 
-/* Handy: weniger Abstand, kleineres Logo */
+
 @media (max-width: 600px) {
     .container {
         padding: 0 var(--space-md);
