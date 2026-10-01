@@ -208,7 +208,6 @@ export default function FileUpload() {
                                 <h2 className="card__title" id="summary-title">Import abgeschlossen</h2>
                                 <p className="card__subtitle">Deine Dateien wurden erfolgreich ausgewertet.</p>
                             </div>
-                            <span className="status-badge">Bereit</span>
                         </div>
                         <div className="summary">
                             <div className="summary__item">
