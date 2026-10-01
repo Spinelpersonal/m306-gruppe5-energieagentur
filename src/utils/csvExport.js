@@ -36,12 +36,3 @@ export function csvExport(data, filename = "export.csv") {
         document.body.removeChild(link);
     };
 };
-
-// Naechste Schritte fuer die Einbindung ins Projekt m306-gruppe5-energieagentur:
-// 1. In FileUpload.jsx die Verbrauchs-Maps fuer Sensor-ID 735 und 742 in Zeilen
-//    mit den Spalten timestamp, sensorId und value umwandeln; Map-Schluessel sind Zeitstempel.
-// 2. Einen Export-Button anzeigen, sobald Daten vorliegen, und beim Klick
-//    csvExport(exportRows, "verbrauch.csv") aufrufen.
-// 3. Mit Daten beider Sensor-IDs exportieren und pruefen, dass die CSV-Datei
-//    heruntergeladen wird, sich in einer Tabellenkalkulation oeffnen laesst
-//    und Zeitstempel sowie Werte korrekt den Sensor-IDs zugeordnet sind.

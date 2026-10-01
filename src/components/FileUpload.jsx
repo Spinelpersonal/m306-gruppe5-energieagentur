@@ -5,6 +5,7 @@ import { getConsumptionByTimestamp } from "../data/consumptionByTimestamp";
 import ZaehlerstandChart from "./ZaehlerstandChart.jsx";
 import { eslFilesToReadings } from "./zaehlerstandChart.js";
 import VerbrauchChart from "./VerbrauchChart.jsx";
+import { csvExport } from "../utils/csvExport";
 
 function getXmlFormat(xmlText) {
     if (/<(?:[\w.-]+:)?ValidatedMeteredData(?:_\d+)?(?=[\s/>])/.test(xmlText)) {
@@ -28,6 +29,36 @@ function parseXml(xmlText) {
         throw new Error("Das ESL-XML enthält kein unterstütztes Datenformat.");
     }
     return { format, data };
+}
+
+// Dies ist eine hilfsfunktion zur export als CSV
+function consumptionMapsToRows(consumption) {
+    // Struktur der Maps definieren, values einfügen wenn sie existieren
+    const maps = [
+        {
+            sensorId: 735,
+            values: consumption?.consumptionByTimestamp_ID735,
+        },
+        {
+            sensorId: 742,
+            values: consumption?.consumptionByTimestamp_ID742,
+        },
+    ];
+
+    return maps
+        // flatMap maps the array and returns a flat array, basically an array without any lists or arrays nested inside it
+        .flatMap(({ sensorId, values }) => 
+            [...(values ?? new Map())].map(([timestamp, value]) => ({
+                timestamp: new Date(Number(timestamp)).toISOString(),
+                sensorId,
+                value,
+            }))
+        )
+        // compare the first row with the second, 0 means the order doesn't matter, negative means the first row has to come first, positive means it comes later
+        .sort(
+            (firstRow, secondRow) =>
+                Date.parse(firstRow.timestamp) - Date.parse(secondRow.timestamp)
+        )
 }
 
 function countMeasurements(parsedFile) {
@@ -54,6 +85,7 @@ export default function FileUpload() {
     const readings = getAbsoluteReadings(summary);
 
     const consumption = summary?.consumptionByTimestamp;
+    const exportRows = consumptionMapsToRows(consumption);
 
     const hasConsumption =
         (consumption?.consumptionByTimestamp_ID742?.size ?? 0) > 0 ||
@@ -173,6 +205,11 @@ export default function FileUpload() {
                         <p>
                             Keine ESL-Zählerstände zum Anzeigen.
                         </p>
+                    )}
+                    {exportRows.length > 0 && (
+                        <button type="button" onClick={() => csvExport(exportRows, "verbrauch.csv")}>
+                            Alle Daten als CSV exportieren
+                        </button>
                     )}
                 </div>
             )}
