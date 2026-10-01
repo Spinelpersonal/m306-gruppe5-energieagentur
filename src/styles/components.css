@@ -1,0 +1,393 @@
+/* Weisse Karte mit runden Ecken und Schatten */
+.card {
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: var(--space-lg);
+}
+
+/* Obere Zeile der Karte: Titel links, Buttons rechts */
+.card__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.card__header--centered {
+    justify-content: center;
+    text-align: center;
+}
+
+/* Titel der Karte, z. B. "Verbrauch" */
+.card__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+/* Grauer Text unter dem Titel */
+.card__subtitle {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+/* Tag/Woche/Monat und Screenshot-Button nebeneinander */
+.card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+/* Grundform von allen Buttons */
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: 10px 20px;
+    font: inherit;
+    font-weight: 600;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+/* Button ausgegraut, wenn man ihn nicht drücken kann */
+.button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Hellblauer Rahmen, wenn man mit Tab auf den Button geht */
+.button:focus-visible {
+    outline: 3px solid var(--color-blue-light);
+    outline-offset: 2px;
+}
+
+/* Blauer Button "CSV exportieren" */
+.button--primary {
+    color: #fff;
+    background: var(--color-blue);
+}
+
+/* Wird dunkler beim Drüberfahren */
+.button--primary:hover:not(:disabled) {
+    background: var(--color-blue-dark);
+    transform: translateY(-1px);
+}
+
+/* Weisser Button "Screenshot speichern" */
+.button--secondary {
+    padding: 6px 14px;
+    font-size: 0.875rem;
+    color: var(--color-text);
+    background: var(--color-surface);
+    border-color: var(--color-border);
+}
+
+/* Wird blau beim Drüberfahren */
+.button--secondary:hover:not(:disabled) {
+    border-color: var(--color-blue);
+    color: var(--color-blue);
+    background: var(--color-blue-soft);
+}
+
+.select {
+    min-height: 38px;
+    padding: 6px 34px 6px 12px;
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+.select:focus-visible {
+    outline: 3px solid var(--color-blue-light);
+    outline-offset: 2px;
+}
+
+/* Graue Box um Tag/Woche/Monat */
+.button-group {
+    display: inline-flex;
+    padding: var(--space-xs);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+}
+
+/* Einzelner Button in der Box */
+.button-group__item {
+    padding: 6px 14px;
+    font: inherit;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Text wird blau beim Drüberfahren */
+.button-group__item:hover {
+    color: var(--color-blue);
+}
+
+/* Gewählter Button ist blau */
+.button-group__item--active,
+.button-group__item--active:hover {
+    color: #fff;
+    background: var(--color-blue);
+}
+
+/* Hellblauer Rahmen, wenn man mit Tab drauf geht */
+.button-group__item:focus-visible {
+    outline: 3px solid var(--color-blue-light);
+    outline-offset: 1px;
+}
+
+/* Grosse Upload-Fläche mit gestricheltem Rand */
+.dropzone {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    min-height: 200px;
+    padding: var(--space-xl) var(--space-lg);
+    text-align: center;
+    border: 2px dashed var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-bg);
+    transition: border-color 0.15s, background-color 0.15s;
+}
+
+/* Wird blau beim Drüberfahren oder Dateien reinziehen */
+.dropzone:hover,
+.dropzone:focus-within {
+    border-color: var(--color-blue);
+    background: var(--color-blue-soft);
+}
+
+/* Blasser, während Dateien geladen werden */
+.dropzone--disabled {
+    opacity: 0.6;
+}
+
+/* Unsichtbares Datei-Feld über der ganzen Fläche, darum geht Klicken und Reinziehen */
+.dropzone__input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Kein Klick-Zeiger, während Dateien geladen werden */
+.dropzone__input:disabled {
+    cursor: not-allowed;
+}
+
+/* Blauer Pfeil in der Upload-Fläche */
+.dropzone__icon {
+    width: 40px;
+    height: 40px;
+    color: var(--color-blue);
+}
+
+/* "SDAT- oder ESL-Dateien hierher ziehen oder klicken" */
+.dropzone__text {
+    font-weight: 600;
+}
+
+/* Kleiner grauer Hinweis darunter */
+.dropzone__hint {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+/* Zeile "oder ganzen Ordner auswählen" */
+.folder-upload {
+    margin-top: var(--space-md);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    text-align: center;
+}
+
+/* Blauer Link "ganzen Ordner auswählen" */
+.folder-upload__label {
+    color: var(--color-blue);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Link wird unterstrichen beim Drüberfahren */
+.folder-upload__label:hover {
+    text-decoration: underline;
+}
+
+/* Versteckt das Ordner-Feld, der Link öffnet es trotzdem */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+/* Abstand über Ladebalken und Zusammenfassung */
+.upload-status {
+    margin-top: var(--space-lg);
+}
+
+/* Ladebalken */
+.progress {
+    width: 100%;
+    height: 8px;
+    margin-top: var(--space-sm);
+    appearance: none;
+    border: none;
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--color-blue-soft);
+}
+
+/* Ladebalken hinten hellblau (Chrome, Edge, Safari) */
+.progress::-webkit-progress-bar {
+    background: var(--color-blue-soft);
+}
+
+/* Ladebalken vorne blau (Chrome, Edge, Safari) */
+.progress::-webkit-progress-value {
+    background: var(--color-blue);
+    border-radius: 999px;
+}
+
+/* Ladebalken vorne blau (Firefox) */
+.progress::-moz-progress-bar {
+    background: var(--color-blue);
+    border-radius: 999px;
+}
+
+/* Kästchen "Dateien" und "Messwerte" nebeneinander */
+.summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+}
+
+/* Ein graues Kästchen */
+.summary__item {
+    flex: 1 1 160px;
+    padding: var(--space-md);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+}
+
+/* Grosse blaue Zahl im Kästchen */
+.summary__value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-blue-dark);
+}
+
+/* Kleiner Text unter der Zahl */
+.summary__label {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    color: #176b3a;
+    font-size: 0.8rem;
+    font-weight: 700;
+    background: #e9f8ef;
+    border-radius: 999px;
+}
+
+.status-badge::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    background: #22a15f;
+    border-radius: 50%;
+}
+
+/* Grauer Hinweistext, z. B. "Keine ESL-Zählerstände" */
+.message {
+    margin-top: var(--space-md);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+/* Roter Text, wenn Dateien nicht gelesen werden konnten */
+.message--error {
+    color: var(--color-error);
+}
+
+.empty-state {
+    margin-top: 0;
+    text-align: center;
+    border: 1px dashed var(--color-border);
+    box-shadow: none;
+}
+
+/* Höhe der Diagramme */
+.chart {
+    position: relative;
+    height: min(60vh, 480px);
+    min-height: 300px;
+}
+
+/* Export-Karte: Text links, Button rechts */
+.export {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+}
+
+/* Handy: weniger Abstand, Buttons über die ganze Breite */
+@media (max-width: 600px) {
+    .card {
+        padding: var(--space-md);
+    }
+
+    .card__header {
+        margin-bottom: var(--space-md);
+    }
+
+    .dropzone {
+        min-height: 160px;
+        padding: var(--space-lg) var(--space-md);
+    }
+
+    .chart {
+        min-height: 260px;
+    }
+
+    .card__actions,
+    .button-group {
+        width: 100%;
+    }
+
+    .button-group__item {
+        flex: 1;
+    }
+
+    .export .button {
+        width: 100%;
+    }
+}

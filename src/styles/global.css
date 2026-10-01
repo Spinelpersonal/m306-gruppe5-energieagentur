@@ -1,0 +1,184 @@
+/* Alle Farben, Abstände und Schrift der Seite. Hier ändern = überall geändert */
+:root {
+    --color-blue-dark: #0b4dba; /* Firmenname, Zahlen, Button beim Drüberfahren */
+    --color-blue: #1677e0; /* Buttons, aktive Auswahl, Links */
+    --color-blue-light: #41c2fa; /* Rahmen, wenn man mit Tab auf einen Button geht */
+    --color-blue-soft: #e8f1fd; /* Upload-Fläche beim Drüberfahren, Hintergrund vom Ladebalken */
+
+    --color-bg: #f5f8fc; /* Hintergrund der Seite */
+    --color-surface: #ffffff; /* Hintergrund der Karten */
+    --color-text: #1f2937; /* normaler Text */
+    --color-text-muted: #6b7280; /* grauer, kleiner Text */
+    --color-border: #dbe3ee; /* Ränder und Linien */
+    --color-error: #b42318; /* Fehlermeldung */
+
+    /* Abstände von klein (xs) bis gross (xl) */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 40px;
+
+    --radius: 12px; /* runde Ecken der Karten */
+    --radius-sm: 8px; /* runde Ecken der Buttons */
+    --shadow: 0 1px 3px rgba(15, 40, 80, 0.06), 0 4px 16px rgba(15, 40, 80, 0.06); /* Schatten unter den Karten */
+
+    --content-width: 1100px; /* so breit wird die Seite maximal */
+
+    --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; /* Schrift der ganzen Seite */
+}
+
+/* Rand und Innenabstand zählen zur Breite dazu */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+/* Schrift, Textfarbe und Hintergrund der ganzen Seite */
+body {
+    margin: 0;
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--color-text);
+    background: var(--color-bg);
+    -webkit-font-smoothing: antialiased;
+}
+
+button,
+select,
+input {
+    font: inherit;
+}
+
+/* Kein Standard-Abstand bei Titeln und Text */
+h1,
+h2,
+h3,
+p {
+    margin: 0;
+}
+
+/* Bilder werden nie breiter als ihr Platz */
+img {
+    display: block;
+    max-width: 100%;
+}
+
+/* Footer bleibt immer ganz unten */
+.app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Inhalt in der Mitte und nicht zu breit */
+.container {
+    width: 100%;
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 0 var(--space-lg);
+}
+
+/* Weisser Balken oben */
+.header {
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* Logo und Text nebeneinander */
+.header__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding-top: var(--space-md);
+    padding-bottom: var(--space-md);
+}
+
+/* Grösse vom Logo */
+.header__logo {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+/* "Energieagentur Bünzli" */
+.header__title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-blue-dark);
+}
+
+/* "SDAT- & ESL-Viewer" */
+.header__subtitle {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+/* Karten untereinander mit Abstand */
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-xl);
+}
+
+.intro {
+    max-width: 720px;
+    margin: 0 auto var(--space-md);
+    text-align: center;
+}
+
+.eyebrow {
+    margin-bottom: var(--space-sm);
+    color: var(--color-blue);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.intro__title {
+    color: var(--color-text);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+}
+
+.intro__text {
+    max-width: 620px;
+    margin: var(--space-md) auto 0;
+    color: var(--color-text-muted);
+}
+
+/* "Gruppe 5 · M306 · 2026" ganz unten */
+.footer {
+    padding: var(--space-lg) 0;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    text-align: center;
+}
+
+/* Handy: weniger Abstand, kleineres Logo */
+@media (max-width: 600px) {
+    .container {
+        padding: 0 var(--space-md);
+    }
+
+    .main {
+        gap: var(--space-md);
+        padding-top: var(--space-lg);
+        padding-bottom: var(--space-lg);
+    }
+
+    .header__logo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .header__title {
+        font-size: 1.1rem;
+    }
+}

@@ -50,45 +50,30 @@ export default function VerbrauchChart({ consumptionByTimestamp }) {
     }
 
     return (
-        <section aria-label="Verbrauchsanalyse">
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    flexWrap: "wrap",
-                    gap: 16,
-                }}
-            >
-                <h2>
-                    Verbrauch und Einspeisung -{" "}
-                    {PERIOD_NAMES[selectedPeriod]}
-                </h2>
+        <section className="card" aria-label="Verbrauchsanalyse">
+            <div className="card__header">
+                <div>
+                    <h2 className="card__title">Verbrauch und Einspeisung</h2>
+                    <p className="card__subtitle">{PERIOD_NAMES[selectedPeriod]}</p>
+                </div>
 
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 12,
-                    }}
-                >
-                    <label htmlFor="verbrauch-period">
-                        Übersicht:
-                    </label>
-
-                    <select
-                        id="verbrauch-period"
-                        value={selectedPeriod}
-                        onChange={(event) =>
-                            setSelectedPeriod(event.target.value)
-                        }
-                    >
-                        <option value="day">Täglich</option>
-                        <option value="week">Wöchentlich</option>
-                        <option value="month">Monatlich</option>
-                    </select>
+                <div className="card__actions">
+                    <div className="button-group" aria-label="Zeitraum auswählen">
+                        {[["day", "Tag"], ["week", "Woche"], ["month", "Monat"]].map(([period, label]) => (
+                            <button
+                                className={`button-group__item${selectedPeriod === period ? " button-group__item--active" : ""}`}
+                                type="button"
+                                key={period}
+                                aria-pressed={selectedPeriod === period}
+                                onClick={() => setSelectedPeriod(period)}
+                            >
+                                {label}
+                            </button>
+                        ))}
+                    </div>
 
                     <button
+                        className="button button--secondary"
                         type="button"
                         onClick={saveScreenshot}
                         disabled={!hasConsumption}
@@ -98,13 +83,7 @@ export default function VerbrauchChart({ consumptionByTimestamp }) {
                 </div>
             </div>
 
-            <div
-                style={{
-                    position: "relative",
-                    height: "min(62vh, 520px)",
-                    minHeight: 320,
-                }}
-            >
+            <div className="chart">
                 <canvas ref={canvasRef} />
             </div>
         </section>

@@ -152,49 +152,85 @@ export default function FileUpload() {
     }
 
     return (
-        <div>
-            <p>Einzelne oder mehrere XML-Dateien auswählen:</p>
-            <input
-                type="file"
-                accept=".xml,application/xml,text/xml"
-                multiple
-                disabled={isProcessing}
-                onChange={handleFiles}
-            />
+        <>
+            <section className="card upload-card" aria-labelledby="upload-title">
+                <div className="card__header card__header--centered">
+                    <div>
+                        <h2 className="card__title" id="upload-title">XML-Dateien hochladen</h2>
+                        <p className="card__subtitle">Unterstützt werden SDAT- und ESL-Dateien.</p>
+                    </div>
+                </div>
 
-            <p>Alternativ einen ganzen Ordner auswählen:</p>
-            <input
-                type="file"
-                accept=".xml,application/xml,text/xml"
-                webkitdirectory=""
-                directory=""
-                multiple
-                disabled={isProcessing}
-                onChange={handleFiles}
-            />
+                <label className={`dropzone${isProcessing ? " dropzone--disabled" : ""}`}>
+                    <input
+                        className="dropzone__input"
+                        type="file"
+                        accept=".xml,application/xml,text/xml"
+                        multiple
+                        disabled={isProcessing}
+                        onChange={handleFiles}
+                    />
+                    <svg className="dropzone__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <span className="dropzone__text">XML-Dateien hierher ziehen oder klicken</span>
+                    <span className="dropzone__hint">Du kannst mehrere Dateien gleichzeitig auswählen.</span>
+                </label>
 
-            {progress && isProcessing && (
-                <p>
-                    Verarbeite Datei {progress.processed} von {progress.total} …
+                <p className="folder-upload">
+                    Oder einen <label className="folder-upload__label" htmlFor="folder-upload">ganzen Ordner auswählen</label>
                 </p>
-            )}
+                <input
+                    id="folder-upload"
+                    className="visually-hidden"
+                    type="file"
+                    accept=".xml,application/xml,text/xml"
+                    webkitdirectory=""
+                    directory=""
+                    multiple
+                    disabled={isProcessing}
+                    onChange={handleFiles}
+                />
+
+                {progress && isProcessing && (
+                    <div className="upload-status" aria-live="polite">
+                        <p>Verarbeite Datei {progress.processed} von {progress.total} …</p>
+                        <progress className="progress" value={progress.processed} max={progress.total} />
+                    </div>
+                )}
+            </section>
 
             {summary && (
-                <div>
-                    <p>
-                        Fertig: {summary.fileCount} XML-Dateien mit insgesamt{" "}
-                        {summary.measurementCount} Messwerten verarbeitet.
-                    </p>
+                <>
+                    <section className="card" aria-labelledby="summary-title">
+                        <div className="card__header">
+                            <div>
+                                <h2 className="card__title" id="summary-title">Import abgeschlossen</h2>
+                                <p className="card__subtitle">Deine Dateien wurden erfolgreich ausgewertet.</p>
+                            </div>
+                            <span className="status-badge">Bereit</span>
+                        </div>
+                        <div className="summary">
+                            <div className="summary__item">
+                                <p className="summary__value">{summary.fileCount}</p>
+                                <p className="summary__label">XML-Dateien</p>
+                            </div>
+                            <div className="summary__item">
+                                <p className="summary__value">{summary.measurementCount.toLocaleString("de-CH")}</p>
+                                <p className="summary__label">Messwerte</p>
+                            </div>
+                        </div>
                     {summary.errorCount > 0 && (
-                        <p>
+                        <p className="message message--error">
                             {summary.errorCount} Dateien konnten nicht verarbeitet
                             werden. Details stehen in der Browser-Konsole.
                         </p>
                     )}
+                    </section>
                     {hasConsumption ? (
                         <VerbrauchChart consumptionByTimestamp={consumption} />
                     ) : (
-                        <p>
+                        <p className="card message empty-state">
                             Für das Verbrauchsdiagramm werden SDAT-Verbrauchswerte
                             der ID 735 oder ID 742 benötigt.
                         </p>
@@ -202,17 +238,23 @@ export default function FileUpload() {
                     {readings.length > 0 ? (
                         <ZaehlerstandChart readings={readings} />
                     ) : (
-                        <p>
+                        <p className="card message empty-state">
                             Keine ESL-Zählerstände zum Anzeigen.
                         </p>
                     )}
                     {exportRows.length > 0 && (
-                        <button type="button" onClick={() => csvExport(exportRows, "verbrauch.csv")}>
-                            Alle Daten als CSV exportieren
-                        </button>
+                        <section className="card export">
+                            <div>
+                                <h2 className="card__title">Daten exportieren</h2>
+                                <p className="card__subtitle">Alle Verbrauchswerte als CSV-Datei speichern.</p>
+                            </div>
+                            <button className="button button--primary" type="button" onClick={() => csvExport(exportRows, "verbrauch.csv")}>
+                                CSV exportieren
+                            </button>
+                        </section>
                     )}
-                </div>
+                </>
             )}
-        </div>
+        </>
     );
 }

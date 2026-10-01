@@ -40,13 +40,17 @@ export default function ZaehlerstandChart({ readings }) {
     }
 
     return (
-        <section aria-label="Absolute Zählerstände">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
-                <h2>{VIEWS.find((entry) => entry.id === view).label}</h2>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <label htmlFor="chart-view">Ansicht:</label>
+        <section className="card" aria-label="Absolute Zählerstände">
+            <div className="card__header">
+                <div>
+                    <h2 className="card__title">Zählerstände</h2>
+                    <p className="card__subtitle">{VIEWS.find((entry) => entry.id === view).label}</p>
+                </div>
+                <div className="card__actions">
+                    <label className="visually-hidden" htmlFor="chart-view">Ansicht:</label>
 
                     <select
+                        className="select"
                         id="chart-view"
                         value={view}
                         onChange={(event) => setView(event.target.value)}
@@ -59,6 +63,7 @@ export default function ZaehlerstandChart({ readings }) {
                     </select>
 
                     <button
+                        className="button button--secondary"
                         type="button"
                         onClick={saveScreenshot}
                         disabled={visibleReadings.length === 0}
@@ -67,7 +72,7 @@ export default function ZaehlerstandChart({ readings }) {
                     </button>
                 </div>
             </div>
-            <div style={{ position: "relative", height: "min(62vh, 520px)", minHeight: 320 }}>
+            <div className="chart">
                 <canvas ref={canvasRef} />
             </div>
         </section>

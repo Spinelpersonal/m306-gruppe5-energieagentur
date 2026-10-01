@@ -3,8 +3,6 @@ import { XMLParser } from "fast-xml-parser";
 export function parseSdat(xmlText) {
     const parser = new XMLParser({
         ignoreAttributes: false,
-        // XML-Präfixe sind keine festen Feldnamen. Dadurch funktionieren sowohl
-        // <rsm:MeteringData> als auch andere bzw. Default-Namespaces.
         removeNSPrefix: true
     });
 
@@ -44,8 +42,6 @@ export function parseSdat(xmlText) {
     const startDateTime = interval.StartDateTime;
     const endDateTime = interval.EndDateTime;
 
-    // Resolution ist in SDAT optional. Monats- oder Jahresaggregate enthalten
-    // häufig nur Interval + eine Observation, aber keine Resolution.
     const resolutionValue = resolution?.Resolution ?? null;
     const resolutionUnit = resolution?.Unit ?? null;
 
