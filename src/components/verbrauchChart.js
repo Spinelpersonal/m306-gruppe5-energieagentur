@@ -4,16 +4,18 @@ const DAY_IN_MS = 24 * 60 * 60 * 1000;
 
 const SERIES = [
     {
-        key: "consumptionByTimestamp_ID742",
-        label: "Bezug (ID 742)",
-        borderColor: "#087e8b",
-        backgroundColor: "rgba(8, 126, 139, 0.65)",
-    },
-    {
         key: "consumptionByTimestamp_ID735",
         label: "Einspeisung (ID 735)",
         borderColor: "#d45c35",
         backgroundColor: "rgba(212, 92, 53, 0.65)",
+        order: 1,
+    },
+    {
+        key: "consumptionByTimestamp_ID742",
+        label: "Bezug (ID 742)",
+        borderColor: "#087e8b",
+        backgroundColor: "rgba(8, 126, 139, 0.65)",
+        order: 2,
     },
 ];
 
@@ -177,13 +179,13 @@ export function renderVerbrauchChart(
 
     const datasets = SERIES.map((series) => ({
         label: series.label,
-        data: mapToPeriodPoints(
-            consumptionByTimestamp?.[series.key],
-            period
-        ),
-        borderColor: series.borderColor,
+        data: mapToPeriodPoints(consumptionByTimestamp?.[series.key], period),
+        order: series.order,
         backgroundColor: series.backgroundColor,
-        borderWidth: 1,
+        hoverBackgroundColor: series.backgroundColor,
+        borderWidth: 0,
+        categoryPercentage: 1,
+        barPercentage: 1,
         maxBarThickness: 18,
         normalized: true,
     }));
@@ -192,7 +194,6 @@ export function renderVerbrauchChart(
         type: "bar",
         data: { datasets },
         options: {
-            devicePixelRatio: 1,
             parsing: false,
             animation: false,
             responsive: true,
