@@ -12,10 +12,10 @@ Die Anwendung basiert auf der Projektbeschreibung «Energieagentur Bünzli» und
 - Bezug (`ID 742`) und Einspeisung (`ID 735`) getrennt auswerten
 - Doppelte SDAT-Messwerte anhand ihres Zeitstempels zusammenführen
 - SDAT-Verbrauchswerte täglich, wöchentlich oder monatlich aggregieren
-- Absolute Zählerstände aus einem ESL-Ausgangswert und den nachfolgenden SDAT-Verbrauchswerten berechnen
 - Verbrauch und Einspeisung als Balkendiagramm anzeigen
-- Absolute Zählerstände gemeinsam oder einzeln als Liniendiagramm anzeigen
+- Absolute Zählerstände aus ESL-Dateien gemeinsam oder einzeln als Liniendiagramm anzeigen
 - Beide Diagramme als PNG-Screenshot speichern
+- Alle importierten SDAT-Verbrauchswerte als CSV-Datei exportieren
 - Fortschritt und fehlerhafte Dateien bei grösseren Importen ausweisen
 
 ## Unterstützte Messwerte
@@ -45,7 +45,7 @@ Damit sind die Anforderungen der aktuell eingesetzten Versionen von Vite und Vit
 ## Installation und Start
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Spinelpersonal/m306-gruppe5-energieagentur.git
 cd energieagentur
 npm install
 npm run dev
@@ -61,11 +61,11 @@ Vite zeigt anschliessend die lokale Adresse an, standardmässig `http://localhos
 4. Im Verbrauchsdiagramm zwischen Tages-, Wochen- und Monatsübersicht wechseln.
 5. Im Zählerstandsdiagramm beide Richtungen gemeinsam oder nur Bezug beziehungsweise Einspeisung anzeigen.
 6. Bei Bedarf das jeweilige Diagramm über **Screenshot speichern** als PNG herunterladen.
+7. Die SDAT-Verbrauchswerte über **CSV exportieren** als `verbrauch.csv` speichern.
 
 Fehler einzelner Dateien verhindern nicht die Verarbeitung der übrigen Dateien. Eine Zusammenfassung erscheint in der Oberfläche; Details zu nicht lesbaren Dateien stehen in der Browser-Konsole.
 
-> [!NOTE]
-> Für absolute Zählerstände verwendet EnergyChart den letzten ESL-Zählerstand, dessen Zeitpunkt vor oder genau auf dem ersten SDAT-Messwert der jeweiligen Zählrichtung liegt. Fehlt ein solcher ESL-Wert, beginnt die berechnete Reihe bei `0`.
+Die CSV-Datei enthält die Spalten `timestamp`, `sensorId` und `value`. Zeitstempel werden im ISO-8601-Format ausgegeben; die Zeilen sind chronologisch sortiert. Der Export wird nur angezeigt, wenn mindestens ein SDAT-Verbrauchswert vorhanden ist.
 
 ## Datenverarbeitung
 
@@ -73,8 +73,9 @@ Fehler einzelner Dateien verhindern nicht die Verarbeitung der übrigen Dateien.
 2. Die Parser normalisieren Zeitpunkte, Sensor-IDs und Messwerte.
 3. SDAT-Duplikate mit derselben Zählrichtung und demselben Zeitstempel werden überschrieben, sodass pro Zeitpunkt ein Wert verbleibt.
 4. Die Verbrauchsanalyse summiert die relativen SDAT-Werte in UTC-basierte Tages-, ISO-Wochen- oder Monatsgruppen.
-5. Für die Zählerstandsanalyse wird der passende ESL-Wert als Ausgangspunkt gewählt und der zeitlich sortierte SDAT-Verbrauch fortlaufend addiert.
-6. Chart.js rendert die aufbereiteten Reihen im Browser.
+5. Doppelte ESL-Zählerstände derselben Zählrichtung und desselben Zeitpunkts werden zusammengeführt und chronologisch sortiert.
+6. Die Zählerstandsanalyse stellt die absoluten Werte aus den ESL-Dateien dar; SDAT-Werte werden dafür nicht hochgerechnet.
+7. Chart.js rendert die aufbereiteten Reihen im Browser.
 
 ## Verfügbare Befehle
 
@@ -103,6 +104,8 @@ energieagentur/
 │   ├── parsers/
 │   │   ├── eslParser.js
 │   │   └── sdatParser.js
+│   ├── utils/
+│   │   └── csvExport.js          # CSV-Datei im Browser erzeugen
 │   ├── App.jsx
 │   └── main.jsx
 ├── package.json
@@ -129,10 +132,9 @@ npm run preview
 
 Der Inhalt von `dist/` kann auf einem statischen Webserver bereitgestellt werden. Die Anwendung benötigt zur Laufzeit kein Backend.
 
-## Noch nicht umgesetzt
+## nicht umgesetzt
 
-Folgende Punkte gehören zur ursprünglichen Projektbeschreibung, sind im aktuellen Stand aber noch nicht implementiert:
+Folgende Punkte gehören zur Kategorie "Nice to have" und wir haben uns dagegenn entschieden, diese umzusetzen und und lieber mehr Zeit geben für die Anderen Aufgaben.
 
-- Export der Zählerstände als CSV
 - Export der Daten als JSON-Datei
 - Übertragung der JSON-Daten per HTTP `POST`

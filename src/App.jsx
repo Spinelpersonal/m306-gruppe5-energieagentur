@@ -14,18 +14,9 @@ function App() {
       </header>
 
       <main className="container main">
-        <div className="intro">
-          <p className="eyebrow">Energiedaten einfach auswerten</p>
-          <h2 className="intro__title">Messdaten hochladen und direkt analysieren</h2>
-          <p className="intro__text">
-            XML-Dateien einlesen, Verbrauch und Einspeisung vergleichen und
-            Ergebnisse als CSV oder Bild exportieren.
-          </p>
-        </div>
         <FileUpload />
       </main>
 
-      <footer className="footer container">EnergyChart · 2026</footer>
     </div>
   );
 }
